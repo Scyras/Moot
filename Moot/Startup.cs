@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+
+using Moot.Environments;
+using Moot.DB;
+using AutoMapper;
 
 namespace Moot
 {
@@ -29,6 +34,11 @@ namespace Moot
         {
             // Add framework services.
             services.AddMvc();
+            services.AddAutoMapper();
+            
+
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=Moot.AspNetCore.NewDb;Trusted_Connection=True;";
+            services.AddDbContext<MootContext>(options => options.UseSqlServer(connection));            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +60,7 @@ namespace Moot
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
-            {
+            {                
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
